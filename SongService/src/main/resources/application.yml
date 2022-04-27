@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: METADATA
+  datasource:
+    password: postgres
+    url: jdbc:postgresql://localhost:5434/metadata
+    username: postgres
+    driver: org.postgresql.Drive\
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      ack-mode: manual
+eureka:
+  client:
+    server-url:
+      defaultZone: http://localhost:8761/
+
+EUREKA_URL: http://localhost:8761/
+#POSTGRES_HOST: jdbc:postgresql://localhost:5434/metadata
+KAFKA_URL: http://localhost:9092/
