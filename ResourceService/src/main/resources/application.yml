@@ -6,7 +6,7 @@ spring:
     name: RESOURCE
   datasource:
     password: postgres
-    url: jdbc:postgresql://localhost:5435/song
+    url: jdbc:postgresql://@db:5435/song
     username: postgres
     driver: org.postgresql.Drive
   kafka:
@@ -34,5 +34,6 @@ changeBy: kafka
 
 AWS_ENTRYPOINT: http://localhost:4566
 EUREKA_URL: http://localhost:8761/
-#POSTGRES_HOST: jdbc:postgresql://localhost:5435/song
 KAFKA_URL: http://localhost:9092/
+POSTGRES_HOST: postgres
+DATABASE_URL: postgresql://postgres:postgres@db:5435/song

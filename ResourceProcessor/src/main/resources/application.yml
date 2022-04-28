@@ -24,3 +24,4 @@ EUREKA_URL: http://localhost:8761/
 #POSTGRES_HOST: jdbc:postgresql://localhost:5435/song
 AWS_ENTRYPOINT: http://localhost:4566
 KAFKA_URL: http://localhost:9092/
+POSTGRES_HOST: postgresql://postgres:postgres@db:5435/song

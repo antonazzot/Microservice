@@ -8,11 +8,13 @@ services:
         - 5435:5432
         volumes:
         - ./pg_data:/var/lib/postgresql/data/pg_data
-        environment:
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_USER: postgres
-            POSTGRES_DB: song
-            PGDATA: /var/lib/postgresql/data/pg_data
+#         environment:
+#             POSTGRES_PASSWORD: postgres
+#             POSTGRES_USER: postgres
+#             POSTGRES_DB: song
+#             PGDATA: /var/lib/postgresql/data/pg_data
+        env_file:
+            - "./songdb.env"
         restart: always
         networks:
             - songdb
@@ -24,17 +26,20 @@ services:
         - 5434:5432
         volumes:
         - ./pg_data/metadata:/var/lib/postgresql/data/pg_data
-        environment:
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_USER: postgres
-            POSTGRES_DB: metadata
-            PGDATA: /var/lib/postgresql/data/pg_data
+#         environment:
+#             POSTGRES_PASSWORD: postgres
+#             POSTGRES_USER: postgres
+#             POSTGRES_DB: metadata
+#             PGDATA: /var/lib/postgresql/data/pg_data
+        env_file:
+        - "./dbmeta.env"
+
         restart: always
         networks:
             - dbmeta
 
     song-services:
-        build: ../SongService
+        build: ./SongService
         image: songservice
         container_name: song_services_container
         ports:
@@ -42,6 +47,7 @@ services:
         environment:
             KAFKA_URL: kafka
             EUREKA_URL: eureka
+            POSTGRES_HOST: dbmeta
         restart: always
         depends_on:
             - dbmeta
@@ -54,7 +60,7 @@ services:
             - dbmeta
 
     parser:
-        build: ../ResourceProcessor
+        build: ./ResourceProcessor
         image: processor
         container_name: proc_container
         ports:
@@ -62,6 +68,7 @@ services:
         environment:
             KAFKA_URL: kafka
             EUREKA_URL: eureka
+            POSTGRES_HOST: db
         restart: always
         depends_on:
             - db
@@ -74,7 +81,7 @@ services:
             - songdb
 
     resourse-service:
-        build: .
+        build: ./ResourceService
         container_name: resourse_services_container
         ports:
             - 8080:8080
@@ -82,6 +89,7 @@ services:
             KAFKA_URL: kafka
             EUREKA_URL: eureka
             AWS_ENTRYPOINT: localstack
+            POSTGRES_HOST: db
         depends_on:
             - db
             - eureka
@@ -133,7 +141,7 @@ services:
 #               KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
 #               KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 #               KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-              ALLOW_PLAINTEXT_LISTENER: yes
+#               ALLOW_PLAINTEXT_LISTENER: true
 
 #             - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT: PLAINTEXT,EXTERNAL:PLAINTEXT
 #             - KAFKA_CFG_LISTENERS=CLIENT: //:9092,EXTERNAL://:9093

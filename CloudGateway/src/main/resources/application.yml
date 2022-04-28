@@ -1,0 +1,23 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: GATAWAY
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
+      routes:
+        - id: RESOURCE
+          uri: lb://RESOURCE
+          predicates:
+            - Path=/resources/**
+
+
+eureka:
+  client:
+    server-url:
+      defaultZone: http://localhost:8761/
