@@ -45,4 +45,36 @@ public class KafkaTopicConfig {
                 .replicas(2)
                 .build();
     }
+
+    @Bean
+    public NewTopic changestage() {
+        return TopicBuilder.name("changestage")
+                .partitions(10)
+                .replicas(2)
+                .build();
+    }
+
+    @Bean
+    public NewTopic storesongdto() {
+        return TopicBuilder.name("storesongdto")
+                .partitions(10)
+                .replicas(2)
+                .build();
+    }
+
+    @Bean
+    public NewTopic getextractsong() {
+        return TopicBuilder.name("getextractsong")
+                .partitions(10)
+                .replicas(2)
+                .build();
+    }
+
+    @Bean
+    public NewTopic notification() {
+        return TopicBuilder.name("notification")
+                .partitions(10)
+                .replicas(2)
+                .build();
+    }
 }

@@ -1,12 +1,12 @@
 server:
-  port: 8083
+  port: 8089
 
 spring:
   application:
-    name: PARSER
+    name: STORAGE
   datasource:
     password: postgres
-    url: jdbc:postgresql://localhost:5435/song
+    url: jdbc:postgresql://localhost:5430/storage
     username: postgres
     driver: org.postgresql.Drive
   kafka:
@@ -14,13 +14,12 @@ spring:
     listener:
       ack-mode: manual
 
-
 eureka:
   client:
     server-url:
       defaultZone: http://localhost:8761/
 
-EUREKA_URL: http://localhost:8761/
-#POSTGRES_HOST: jdbc:postgresql://localhost:5435/song
-AWS_ENTRYPOINT: http://localhost:4566
-KAFKA_URL: http://localhost:9092/
+
+bucketnamelist: myfirst1,mysecond2,myttree3
+
+sendBy: kafka
