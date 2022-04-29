@@ -11,10 +11,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Service
 public class ProcessorService {
-    
+
     private final TikaExtractorService tikaExtractorService;
 
-    public SongDTO extractMetadataAndSave (SongDTO songDTO) {
+    public SongDTO extractMetadataAndSave(SongDTO songDTO) {
 
         ObjectMetadata objectMetadata = null;
         try {
@@ -24,7 +24,7 @@ public class ProcessorService {
             e.printStackTrace();
         }
 
-       return songDTO;
+        return songDTO;
     }
 
 }

@@ -16,7 +16,7 @@ public class ConverterService {
 
     private final RandomBucketService randomBucketService;
 
-    public StorageSong convertSongDTO (SongDTO songDTO) {
+    public StorageSong convertSongDTO(SongDTO songDTO) {
         File file = songDTO.getFile();
 
         return StorageSong.builder()

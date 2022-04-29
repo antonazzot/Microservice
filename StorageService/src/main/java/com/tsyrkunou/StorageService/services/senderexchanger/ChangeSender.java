@@ -20,15 +20,16 @@ public class ChangeSender {
     @Value("${sendBy}")
     String sendBy;
 
-    private final   SenderChanger sendWithEureka;
-    private final   SenderChanger sendWithKafka;
+    private final SenderChanger sendWithEureka;
+    private final SenderChanger sendWithKafka;
     private Map<String, SenderChanger> exchangerMap;
+
     @PostConstruct
-    private void setUpExchange () {
-     this.exchangerMap = Map.of("eureka", sendWithEureka, "kafka", sendWithKafka);
+    private void setUpExchange() {
+        this.exchangerMap = Map.of("eureka", sendWithEureka, "kafka", sendWithKafka);
     }
 
-    public SongDTO sendAndRecive (SongDTO songDTO) {
+    public SongDTO sendAndRecive(SongDTO songDTO) {
         return exchangerMap.get(sendBy).sendSongDTOForExtract(songDTO);
     }
 
@@ -37,6 +38,6 @@ public class ChangeSender {
     }
 
     public SongDTO getExtractSong(Integer id) {
-       return exchangerMap.get(sendBy).getExtractDto(id);
+        return exchangerMap.get(sendBy).getExtractDto(id);
     }
 }

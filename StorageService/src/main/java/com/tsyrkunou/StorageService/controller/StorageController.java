@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,25 +24,25 @@ public class StorageController {
 
     @PostMapping("/{dto}")
     @ResponseBody
-    public Integer storeSong (@RequestBody SongDTO songDTO) {
-     return primeStorageService.storeSong(songDTO);
+    public Integer storeSong(@RequestBody SongDTO songDTO) {
+        return primeStorageService.storeSong(songDTO);
     }
 
     @GetMapping("/get/{id}")
     @ResponseBody
-    public StorageSongDto storageSongDto (@PathVariable Integer id) {
+    public StorageSongDto storageSongDto(@PathVariable Integer id) {
         return primeStorageService.getSong(id);
     }
 
     @GetMapping("/changestage/{id}")
     @ResponseBody
-    public void changeStage (@PathVariable Integer id) {
-         primeStorageService.changeStage(id);
+    public void changeStage(@PathVariable Integer id) {
+        primeStorageService.changeStage(id);
     }
 
     @DeleteMapping("/delete/{deleteid}")
     @ResponseBody
-    public void deleteMetadata (@PathVariable Integer [] deleteid) {
+    public void deleteMetadata(@PathVariable Integer[] deleteid) {
         primeStorageService.deleteById(Arrays.asList(deleteid));
     }
 }

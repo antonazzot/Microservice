@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface SenderChanger {
-    SongDTO sendSongDTOForExtract (SongDTO songDTO);
+    SongDTO sendSongDTOForExtract(SongDTO songDTO);
 
     void sendNotify(Integer extractedid);
 

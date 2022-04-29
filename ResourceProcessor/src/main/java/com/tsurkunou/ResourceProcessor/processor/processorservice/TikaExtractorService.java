@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+
 @Slf4j
 @Service
 public class TikaExtractorService {
@@ -45,7 +46,7 @@ public class TikaExtractorService {
             String meta = metadata.get(name);
             userMetadata.put(name, meta);
             log.info("***Song Metadata " +
-                    name +  ": successful extract ={}", meta + '\n');
+                    name + ": successful extract ={}", meta + '\n');
         }
         objectMetadata.setUserMetadata(userMetadata);
 

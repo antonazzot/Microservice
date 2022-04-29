@@ -39,9 +39,7 @@ public class PrimeStorageService {
         StorageSong storageSong;
         SongDTO extractSong = changeSender.getExtractSong(id);
         StorageSongDto storageSongDto = null;
-        if (byId.isPresent())
-
-        {
+        if (byId.isPresent()) {
             storageSong = byId.get();
             storageSongDto = StorageSongDto.builder()
                     .id(id)

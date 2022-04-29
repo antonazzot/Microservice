@@ -14,10 +14,10 @@ import java.util.Random;
 @ConfigurationProperties(prefix = "bucketnamelist")
 public class RandomBucketService {
     @Value("#{'${bucketnamelist}'.split(',')}")
-    private List <String> bucketnamelist;
+    private List<String> bucketnamelist;
 
     public String getBucket() {
         Random random = new Random();
-     return    bucketnamelist.get(random.nextInt(0, bucketnamelist.size()));
+        return bucketnamelist.get(random.nextInt(0, bucketnamelist.size()));
     }
 }

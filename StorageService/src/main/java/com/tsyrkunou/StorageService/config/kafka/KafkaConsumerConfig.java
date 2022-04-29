@@ -49,7 +49,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(@Autowired KafkaTemplate <String, String > kafkaTemplate) {
+    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(@Autowired KafkaTemplate<String, String> kafkaTemplate) {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerObjectFactory());
         factory.setReplyTemplate(kafkaTemplate);
@@ -57,16 +57,15 @@ public class KafkaConsumerConfig {
     }
 
 
-
     @Bean
     public ReplyingKafkaTemplate<String, String, String> replyingDtoTemplate(
             @Autowired ProducerFactory<String, String> producerObjectFactory,
-            @Autowired  ConcurrentMessageListenerContainer<String, String> repliesDtoContainer) {
+            @Autowired ConcurrentMessageListenerContainer<String, String> repliesDtoContainer) {
         return new ReplyingKafkaTemplate<>(producerObjectFactory, repliesDtoContainer);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory(@Autowired KafkaTemplate <String, String> kafkaStrTemplate) {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory(@Autowired KafkaTemplate<String, String> kafkaStrTemplate) {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerObjectFactory());

@@ -35,29 +35,28 @@ public class SendWithEureka implements SenderChanger {
     public SongDTO getExtractDto(Integer id) {
 
         CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker2");
-      return   circuitBreaker.run(() -> restTemplate.getForObject("http://METADATA/metadata/getextract/{id}",
-                SongDTO.class, id),
+        return circuitBreaker.run(() -> (restTemplate.getForObject("http://METADATA/metadata/getextract/{id}",
+                        SongDTO.class, id)),
                 throwable -> notExtractDto(id));
     }
 
-    private SongDTO notExtractDto (SongDTO songDTO) {
+    private SongDTO notExtractDto(SongDTO songDTO) {
         log.info("Parser are not available or faild with download extract dto");
         return songDTO;
     }
 
-    private SongDTO notExtractDto (Integer id) {
+    private SongDTO notExtractDto(Integer id) {
         log.info("Parser are not available or faild with download extract dto");
         return SongDTO.builder()
                 .id(id)
                 .build();
     }
 
-    private Integer extractButNotSave (Integer id) {
-        log.info(" Song's  with id " + id   +" was extract but fail with notificate about");
+    private Integer extractButNotSave(Integer id) {
+        log.info(" Song's  with id " + id + " was extract but fail with notificate about");
         //todo some code with cashing id in storage
         return id;
     }
-
 
 
 }

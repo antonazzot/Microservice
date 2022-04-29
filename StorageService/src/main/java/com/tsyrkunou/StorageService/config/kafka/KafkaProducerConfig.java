@@ -19,6 +19,7 @@ import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @Configuration
 public class KafkaProducerConfig {
 
@@ -38,13 +39,9 @@ public class KafkaProducerConfig {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
-//    @Bean
-//    public KafkaTemplate<String, String> kafkaTemplate(@Autowired ProducerFactory<String, String> producerObjectFactory) {
-//        return new KafkaTemplate<>(producerObjectFactory);
-//    }
 
-    /** replying
-     *
+    /**
+     * replying
      */
 
     @Bean

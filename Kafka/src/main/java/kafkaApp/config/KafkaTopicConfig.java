@@ -8,17 +8,17 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
     @Bean
-    public NewTopic uploadSongTopic (){
+    public NewTopic uploadSongTopic() {
         return TopicBuilder.name("uploadsong").build();
     }
 
     @Bean
-    public NewTopic uploadMetadataTopic (){
+    public NewTopic uploadMetadataTopic() {
         return TopicBuilder.name("uploadmeta").build();
     }
 
     @Bean
-    public NewTopic deleteSongTopic (){
+    public NewTopic deleteSongTopic() {
         return TopicBuilder.name("deletesong").build();
     }
 

@@ -22,4 +22,5 @@ eureka:
 
 bucketnamelist: myfirst1,mysecond2,myttree3
 
-sendBy: kafka
+# work with (eureka/kafka)
+sendBy: eureka
