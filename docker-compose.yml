@@ -34,7 +34,7 @@ services:
             - dbmeta
 
     song-services:
-        build: ../SongService
+        build: ./SongService
         image: songservice
         container_name: song_services_container
         ports:
@@ -54,7 +54,7 @@ services:
             - dbmeta
 
     parser:
-        build: ../ResourceProcessor
+        build: ./ResourceProcessor
         image: processor
         container_name: proc_container
         ports:
@@ -72,7 +72,7 @@ services:
             - app-eureka
 
     storageservice:
-        build: ../StorageService
+        build: ./StorageService
         image: storageserviceimage
         container_name: storage_container
         ports:
@@ -90,15 +90,14 @@ services:
             - app-tier
             - app-eureka
 
-    spring-cloud-gateway:
-      image:  gatewayimage
+    gateway:
       build: ./CloudGateway
       ports:
         - "8088:8088"
 
 
     resourse-service:
-        build: .
+        build: ./ResourceService
         container_name: resourse_services_container
         ports:
             - 8080:8080

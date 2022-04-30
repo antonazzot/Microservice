@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 public class SongServiceMetadataConfig {
     @Bean
     @LoadBalanced
-    public RestTemplate restTemplate () {
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 

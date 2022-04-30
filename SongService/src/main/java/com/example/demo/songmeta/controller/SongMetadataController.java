@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,22 +27,28 @@ public class SongMetadataController {
 
     @PostMapping("/save")
     @ResponseBody
-    public Integer saveMetadata (@RequestBody SongDTO songDTO) {
-      songMetadataService.saveSongMetadataFromKafka(songDTO);
-      log.info("receive dto ={}", songDTO.toString());
-      return 1;
+    public Integer saveMetadata(@RequestBody SongDTO songDTO) {
+        songMetadataService.saveSongMetadataFromKafka(songDTO);
+        log.info("receive dto ={}", songDTO.toString());
+        return 1;
     }
 
     @DeleteMapping("/delete/{deleteid}")
     @ResponseBody
-    public void deleteMetadata (@PathVariable Integer [] deleteid) {
+    public void deleteMetadata(@PathVariable Integer[] deleteid) {
         songMetadataService.deleteById(Arrays.asList(deleteid));
     }
 
     @GetMapping("/songs/{id}")
     @ResponseBody
-    public Optional<String> getSongsMetadata (@PathVariable(name = "id") Integer id) {
+    public Optional<String> getSongsMetadata(@PathVariable(name = "id") Integer id) {
         return songMetadataService.getSongsById(id);
+    }
+
+    @GetMapping("/getextract/{id}")
+    @ResponseBody
+    public SongDTO getSong(@PathVariable Integer id) {
+        return songMetadataService.getSong(id);
     }
 
 }

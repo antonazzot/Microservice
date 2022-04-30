@@ -20,17 +20,16 @@ public class KafkaMetaListener {
 
     @org.springframework.kafka.annotation.KafkaListener(topics = "uploadmeta",
             groupId = "mygroup8")
-    public void factory (String message) throws JsonProcessingException {
+    public void factory(String message) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         SongDTO songDTO = objectMapper.readValue(message, SongDTO.class);
         log.info("SONGDTO ={}", songDTO.getId());
-
-           songMetadataService.saveSongMetadataFromKafka(songDTO);
+        songMetadataService.saveSongMetadataFromKafka(songDTO);
     }
 
     @org.springframework.kafka.annotation.KafkaListener(topics = "deletesong",
             groupId = "mygroup3")
-    public void factoryList (String message) throws JsonProcessingException {
+    public void factoryList(String message) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         List list = objectMapper.readValue(message, List.class);
         list.forEach(System.out::println);
@@ -40,7 +39,7 @@ public class KafkaMetaListener {
     @org.springframework.kafka.annotation.KafkaListener(topics = "getmeta",
             groupId = "mygroup9")
     @SendTo("receivemeta")
-    public String metaFactory (String sid) throws JsonProcessingException {
+    public String metaFactory(String sid) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Integer id = objectMapper.readValue(sid, Integer.class);
         SongMetadata songMetadata = songMetadataService.getSongMetaById(id).orElseThrow();
@@ -48,4 +47,6 @@ public class KafkaMetaListener {
         return objectMapper.writeValueAsString(songMetadata);
 
     }
+
+
 }

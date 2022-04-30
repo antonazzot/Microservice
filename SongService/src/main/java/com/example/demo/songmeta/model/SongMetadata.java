@@ -24,6 +24,6 @@ import javax.persistence.Table;
 public class SongMetadata {
     @Id
     Integer id;
-    @Column (name = "matadata")
+    @Column(name = "matadata")
     String metadata;
 }
