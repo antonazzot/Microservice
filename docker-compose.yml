@@ -7,7 +7,7 @@ services:
         ports:
         - 5430:5432
         volumes:
-        - ../pg_data:/var/lib/postgresql/data/pg_data
+        - ../storage_data:/var/lib/postgresql/data/pg_data
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
@@ -23,7 +23,7 @@ services:
         ports:
         - 5434:5432
         volumes:
-        - ../pg_data/metadata:/var/lib/postgresql/data/pg_data
+        - ../meta_data/metadata:/var/lib/postgresql/data/pg_data
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
@@ -90,10 +90,10 @@ services:
             - app-tier
             - app-eureka
 
-    gateway:
-      build: ./CloudGateway
-      ports:
-        - "8088:8088"
+#     gateway:
+#       build: ../CloudGateway
+#       ports:
+#         - "8088:8088"
 
 
     resourse-service:

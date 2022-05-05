@@ -39,6 +39,7 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -143,6 +144,24 @@
             <version>3.1.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>7.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.influxdb</groupId>
+            <artifactId>influxdb-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.influxdb</groupId>
+            <artifactId>influxdb-client-java</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
 
     </dependencies>
 

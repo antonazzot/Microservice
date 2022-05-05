@@ -1,21 +1,21 @@
 version: '3'
 
 services:
-    db:
+    storagedb:
         image: postgres:14.2-alpine
-        container_name: songdb
+        container_name: storage
         ports:
-        - 5435:5432
+        - 5430:5432
         volumes:
-        - ./pg_data:/var/lib/postgresql/data/pg_data
+        - ../pg_data:/var/lib/postgresql/data/pg_data
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
-            POSTGRES_DB: song
+            POSTGRES_DB: storage
             PGDATA: /var/lib/postgresql/data/pg_data
         restart: always
         networks:
-            - songdb
+            - storage
 
     dbmeta:
         image: postgres:14.2-alpine
@@ -23,7 +23,7 @@ services:
         ports:
         - 5434:5432
         volumes:
-        - ./pg_data/metadata:/var/lib/postgresql/data/pg_data
+        - ../pg_data/metadata:/var/lib/postgresql/data/pg_data
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
@@ -64,17 +64,40 @@ services:
             EUREKA_URL: eureka
         restart: always
         depends_on:
-            - db
             - eureka
             - kafka
             - mykafka
         networks:
             - app-tier
             - app-eureka
-            - songdb
+
+    storageservice:
+        build: ../StorageService
+        image: storageserviceimage
+        container_name: storage_container
+        ports:
+            - 8089:8089
+        environment:
+            KAFKA_URL: kafka
+            EUREKA_URL: eureka
+        restart: always
+        depends_on:
+            - storagedb
+            - eureka
+            - kafka
+            - mykafka
+        networks:
+            - app-tier
+            - app-eureka
+
+#     gateway:
+#       build: ../CloudGateway
+#       ports:
+#         - "8088:8088"
+
 
     resourse-service:
-        build: .
+        build: ../ResourceService
         container_name: resourse_services_container
         ports:
             - 8080:8080
@@ -83,7 +106,6 @@ services:
             EUREKA_URL: eureka
             AWS_ENTRYPOINT: localstack
         depends_on:
-            - db
             - eureka
             - kafka
             - mykafka
@@ -91,10 +113,9 @@ services:
         networks:
             - app-tier
             - app-eureka
-            - songdb
 
     mykafka:
-        build: ./Kafka
+        build: ../Kafka
         image: kafka
         container_name: kafka_container_topic
         ports:
@@ -123,7 +144,7 @@ services:
         networks:
             - app-tier
         volumes:
-            - ./kafka_data:/var/lib/kafka/data/kafka_data
+            - ../kafka_data:/var/lib/kafka/data/kafka_data
         depends_on:
             - zookeeper
         environment:
@@ -148,6 +169,8 @@ services:
             - app-tier
         environment:
           - ALLOW_ANONYMOUS_LOGIN=yes
+
+
 
     localstack:
         container_name: localstack
@@ -174,5 +197,5 @@ networks:
     driver: bridge
   dbmeta:
     driver: bridge
-  songdb:
+  storage:
     driver: bridge

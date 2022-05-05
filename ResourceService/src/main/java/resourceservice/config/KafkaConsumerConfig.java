@@ -12,7 +12,6 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import resourceservice.model.SongDTO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,6 @@ public class KafkaConsumerConfig {
         HashMap<String, Object> prop = new HashMap<>();
         prop.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapservers);
         prop.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-//        prop.put(ConsumerConfig.GROUP_ID_CONFIG, "mygroup2");
         return prop;
     }
 
@@ -36,7 +34,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory(@Autowired KafkaTemplate <String, String> kafkaStrTemplate) {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory(@Autowired KafkaTemplate<String, String> kafkaStrTemplate) {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerObjectFactory());
@@ -45,8 +43,9 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-
-    /** meta consumer */
+    /**
+     * meta consumer
+     */
 
     public Map<String, Object> consumerMetaConfig() {
         HashMap<String, Object> prop = new HashMap<>();
@@ -55,14 +54,13 @@ public class KafkaConsumerConfig {
         return prop;
     }
 
-
     @Bean
     public ConsumerFactory<String, String> consumerMetaFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerMetaConfig(), new StringDeserializer(), new StringDeserializer());
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaStrListenerContainerFactory(@Autowired KafkaTemplate <String, String> kafkaStrTemplate) {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaStrListenerContainerFactory(@Autowired KafkaTemplate<String, String> kafkaStrTemplate) {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerMetaFactory());

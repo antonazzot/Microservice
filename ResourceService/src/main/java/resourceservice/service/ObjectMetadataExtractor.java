@@ -15,12 +15,12 @@ public class ObjectMetadataExtractor {
         objectMetadata.getUserMetadata().put("fileExtension", file.getOriginalFilename());
         return objectMetadata;
     }
-    public ObjectMetadata extractObjectMetadata(MultipartFile file, Map<String, String > userMeta) {
+
+    public ObjectMetadata extractObjectMetadata(MultipartFile file, Map<String, String> userMeta) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
         objectMetadata.setContentType(file.getContentType());
         objectMetadata.setUserMetadata(userMeta);
-//        objectMetadata.getUserMetadata().put("fileExtension", file.getOriginalFilename());
         return objectMetadata;
     }
 }

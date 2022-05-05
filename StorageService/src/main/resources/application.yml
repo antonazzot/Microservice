@@ -6,7 +6,7 @@ spring:
     name: STORAGE
   datasource:
     password: postgres
-    url: jdbc:postgresql://storagedb:5430/storage
+    url: jdbc:postgresql://localhost:5430/storage
     username: postgres
     driver: org.postgresql.Drive
   kafka:

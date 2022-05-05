@@ -2,8 +2,6 @@ package resourceservice.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +13,12 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
-import org.springframework.kafka.support.ProducerListener;
-import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import resourceservice.model.SongDTO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Configuration
 public class KafkaProducerConfig {
@@ -38,27 +34,6 @@ public class KafkaProducerConfig {
         return prop;
     }
 
-//    @Bean
-//    KafkaTemplate<String, SongDTO> kafkaTemplate() {
-//        KafkaTemplate<String, SongDTO> kafkaTemplate = new KafkaTemplate<>(producerObject1Factory());
-//        kafkaTemplate.setMessageConverter(new StringJsonMessageConverter());
-//        kafkaTemplate.setDefaultTopic("uploadsong");
-////        kafkaTemplate.setProducerListener(new ProducerListener<String, String>() {
-////            @Override
-////            public void onSuccess(ProducerRecord<String, String> producerRecord, RecordMetadata recordMetadata) {
-//////                log.info("ACK from ProducerListener message: {} offset:  {}", producerRecord.value(),
-//////                        recordMetadata.offset());
-//////            }
-//////        });
-//        return kafkaTemplate;
-//    }
-//
-//    /**
-//     *  SongDTO Producer */
-//    @Bean
-//    public ProducerFactory<String, SongDTO> producerObject1Factory() {
-//        return new DefaultKafkaProducerFactory<>(producerConfig());
-//    }
 
     @Bean
     public ProducerFactory<String, String> producerObjectFactory() {
@@ -70,26 +45,9 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerObjectFactory);
     }
 
-    @Bean
-    public ConcurrentMessageListenerContainer<String, String> repliesDtoContainer(
-            ConcurrentKafkaListenerContainerFactory<String, String> kafkaJsonListenerContainerFactory) {
-
-        ConcurrentMessageListenerContainer<String, String> repliesContainer =
-                kafkaJsonListenerContainerFactory.createContainer("uploadmeta");
-        repliesContainer.getContainerProperties().setGroupId("mygroup2");
-        repliesContainer.setAutoStartup(false);
-        return repliesContainer;
-    }
-
-    @Bean
-    public ReplyingKafkaTemplate<String, String, String> replyingDtoTemplate(
-            @Autowired   ProducerFactory<String, String> producerObjectFactory,
-            @Autowired  ConcurrentMessageListenerContainer<String, String> repliesDtoContainer) {
-        return new ReplyingKafkaTemplate<>(producerObjectFactory, repliesDtoContainer);
-    }
-
     /**
-     *  Delete by id's list Producer */
+     * Delete by id's list Producer
+     */
 
     @Bean
     public ProducerFactory<String, List<Integer>> producerListFactory() {
@@ -102,7 +60,8 @@ public class KafkaProducerConfig {
     }
 
     /**
-     *  Get metadata by id's Producer */
+     * Get metadata by id's Producer
+     */
 
     public Map<String, Object> producerStrConfig() {
         HashMap<String, Object> prop = new HashMap<>();
@@ -125,7 +84,6 @@ public class KafkaProducerConfig {
     @Bean
     public ConcurrentMessageListenerContainer<String, String> repliesContainer(
             ConcurrentKafkaListenerContainerFactory<String, String> kafkaStrListenerContainerFactory) {
-
         ConcurrentMessageListenerContainer<String, String> repliesContainer =
                 kafkaStrListenerContainerFactory.createContainer("receivemeta");
         repliesContainer.getContainerProperties().setGroupId("group9");
@@ -133,10 +91,55 @@ public class KafkaProducerConfig {
         return repliesContainer;
     }
 
+
+    /**
+     * Store song and recive id
+     **/
+
+    @Bean
+    public ConcurrentMessageListenerContainer<String, String> repliesWithIdContainer(
+            ConcurrentKafkaListenerContainerFactory<String, String> kafkaStrListenerContainerFactory) {
+        ConcurrentMessageListenerContainer<String, String> repliesContainer =
+                kafkaStrListenerContainerFactory.createContainer("storeid");
+        repliesContainer.getContainerProperties().setGroupId("group999");
+        repliesContainer.setAutoStartup(false);
+        return repliesContainer;
+    }
+
+    @Bean
+    public ReplyingKafkaTemplate<String, String, String> replyingIdTemplate(
+            @Autowired ProducerFactory<String, String> producerGetMetaFactory,
+            @Autowired ConcurrentMessageListenerContainer<String, String> repliesWithIdContainer) {
+        return new ReplyingKafkaTemplate<>(producerGetMetaFactory, repliesWithIdContainer);
+    }
+
+
+    /**
+     * Send Id and Get StorageSongDto
+     **/
+
+    @Bean
+    public ConcurrentMessageListenerContainer<String, String> repliesWithStorageSongDtoIdContainer(
+            ConcurrentKafkaListenerContainerFactory<String, String> kafkaStrListenerContainerFactory) {
+        ConcurrentMessageListenerContainer<String, String> repliesContainer =
+                kafkaStrListenerContainerFactory.createContainer("storagesongdto");
+        repliesContainer.getContainerProperties().setGroupId("group99");
+        repliesContainer.setAutoStartup(false);
+        return repliesContainer;
+    }
+
+    @Bean
+    public ReplyingKafkaTemplate<String, String, String> replyingStoreDtoTemplate(
+            @Autowired ProducerFactory<String, String> producerStrFactory,
+            @Autowired ConcurrentMessageListenerContainer<String, String> repliesWithStorageSongDtoIdContainer) {
+        return new ReplyingKafkaTemplate<>(producerStrFactory, repliesWithStorageSongDtoIdContainer);
+    }
+
+
     @Bean
     public ReplyingKafkaTemplate<String, Integer, String> replyingTemplate(
-         @Autowired   ProducerFactory<String, Integer> producerGetMetaFactory,
-          @Autowired  ConcurrentMessageListenerContainer<String, String> repliesContainer) {
+            @Autowired ProducerFactory<String, Integer> producerGetMetaFactory,
+            @Autowired ConcurrentMessageListenerContainer<String, String> repliesContainer) {
         return new ReplyingKafkaTemplate<>(producerGetMetaFactory, repliesContainer);
     }
 

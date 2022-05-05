@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tsyrkunou.StorageService.config.kafka.KafakaSender;
 import com.tsyrkunou.StorageService.dto.SongDTO;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 @Slf4j
+
 @RequiredArgsConstructor
 public class SendWithKafka implements SenderChanger {
     private final KafakaSender kafakaSender;
