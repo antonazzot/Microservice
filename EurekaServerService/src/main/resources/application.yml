@@ -14,3 +14,4 @@ spring:
     url: jdbc:postgresql://localhost:5430/evrekadb
     username: anton
     driver: org.postgresql.Driver
+

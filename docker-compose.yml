@@ -8,14 +8,13 @@ services:
         - 5430:5432
         volumes:
         - ../storage_data:/var/lib/postgresql/data/pg_data
+        - ./sql/create_storagedb.sql:/docker-entrypoint-initdb.d/create_storagedb.sql
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
             POSTGRES_DB: storage
             PGDATA: /var/lib/postgresql/data/pg_data
         restart: always
-        networks:
-            - storage
 
     dbmeta:
         image: postgres:14.2-alpine
@@ -24,14 +23,13 @@ services:
         - 5434:5432
         volumes:
         - ../meta_data/metadata:/var/lib/postgresql/data/pg_data
+        - ./sql/create_metadata.sql:/docker-entrypoint-initdb.d/create_metadata.sql
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
             POSTGRES_DB: metadata
             PGDATA: /var/lib/postgresql/data/pg_data
         restart: always
-        networks:
-            - dbmeta
 
     song-services:
         build: ./SongService
@@ -40,18 +38,15 @@ services:
         ports:
             - 8081:8081
         environment:
-            KAFKA_URL: kafka
-            EUREKA_URL: eureka
-        restart: always
+            EUREKA_SERVICE_URL: 'http://eureka:8761'
+            KAFKA_SERVICE_URL: 'http://kafka:9092'
         depends_on:
             - dbmeta
             - eureka
             - kafka
             - mykafka
         networks:
-            - app-tier
             - app-eureka
-            - dbmeta
 
     parser:
         build: ./ResourceProcessor
@@ -60,15 +55,14 @@ services:
         ports:
             - 8083:8083
         environment:
-            KAFKA_URL: kafka
-            EUREKA_URL: eureka
+            EUREKA_SERVICE_URL: 'http://eureka:8761'
+            KAFKA_SERVICE_URL: 'http://kafka:9092'
         restart: always
         depends_on:
             - eureka
             - kafka
             - mykafka
         networks:
-            - app-tier
             - app-eureka
 
     storageservice:
@@ -78,40 +72,37 @@ services:
         ports:
             - 8089:8089
         environment:
-            KAFKA_URL: kafka
-            EUREKA_URL: eureka
-        restart: always
+            EUREKA_SERVICE_URL: 'http://eureka:8761'
+            KAFKA_SERVICE_URL: 'http://kafka:9092'
         depends_on:
             - storagedb
             - eureka
             - kafka
             - mykafka
         networks:
-            - app-tier
             - app-eureka
 
 #     gateway:
-#       build: ../CloudGateway
+#       build: ./CloudGateway
 #       ports:
-#         - "8088:8088"
-
+#         - 8088:8088
 
     resourse-service:
         build: ./ResourceService
-        container_name: resourse_services_container
+        container_name: resourse_container
         ports:
             - 8080:8080
         environment:
-            KAFKA_URL: kafka
-            EUREKA_URL: eureka
-            AWS_ENTRYPOINT: localstack
+            EUREKA_SERVICE_URL: 'http://eureka:8761'
+            KAFKA_SERVICE_URL: 'http://kafka:9092'
+            LOCAL_STACK_URL: 'http://localstack:4566'
+            INFLUXDB_URL: 'http://influxdb:8086'
         depends_on:
             - eureka
             - kafka
             - mykafka
             - localstack
         networks:
-            - app-tier
             - app-eureka
 
     mykafka:
@@ -121,7 +112,11 @@ services:
         ports:
             - 9094:9094
         restart: always
+        environment:
+            KAFKA_ZOOKEEPER_CONNECT: 'http://zookeeper:2181'
+            KAFKA_CONNECT_URL: 'http://kafka:9092'
         depends_on:
+              - zookeeper
               - kafka
         networks:
               - app-tier
@@ -154,7 +149,7 @@ services:
 #               KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
 #               KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 #               KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-              ALLOW_PLAINTEXT_LISTENER: yes
+              ALLOW_PLAINTEXT_LISTENER: 'true'
 
 #             - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT: PLAINTEXT,EXTERNAL:PLAINTEXT
 #             - KAFKA_CFG_LISTENERS=CLIENT: //:9092,EXTERNAL://:9093
@@ -170,7 +165,16 @@ services:
         environment:
           - ALLOW_ANONYMOUS_LOGIN=yes
 
+    filebeat:
+        build: ./LogerService/filebeat
+        image: filebeat
 
+    elk:
+        image: sebp/elk
+        ports:
+          - "5601:5601" #kibana
+          - "9200:9200" #elastic
+          - "5044:5044" #logstash
 
     localstack:
         container_name: localstack
@@ -189,6 +193,16 @@ services:
         - ${TEMPDIR:-/tmp/localstack}:/tmp/localstack
         - /var/run/docker.sock:/var/run/docker.sock
         - ./script/localstack/s3/init-s3-bucket.sh:/docker-entrypoint-initaws.d/init-s3-bucket.sh
+
+#     influxdb:
+#         image: influxdb
+#         ports:
+#             - 8086:8086
+#         environment:
+#             DOCKER_INFLUXDB_INIT_USERNAME: influxdbname
+#             DOCKER_INFLUXDB_INIT_PASSWORD: influxdbpass
+#             DOCKER_INFLUXDB_INIT_ORG: influxdborg
+#             DOCKER_INFLUXDB_INIT_BUCKET: influxdbbucket
 
 networks:
   app-tier:
