@@ -9,11 +9,23 @@ spring:
     name: RESOURCE
   datasource:
     password: postgres
-    url: jdbc:postgresql:${POSTGRES_HOST_SONG:}//localhost:5435/song
+    url: jdbc:postgresql://localhost:5434/metadata
     username: postgres
     driver: org.postgresql.Drive
+  jpa:
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    user:
+      name: user
+      password: password
+
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_SERVICE_URL:http://localhost:9092}
     listener:
       ack-mode: manual
   servlet:
@@ -23,27 +35,23 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
   influx:
-    url: http://localhost:8086
+    url: ${INFLUXDB_URL:http://localhost:8086}
     user: influxdb
     password: influxdb
     token: axOztm3DugbTq5O9TSL65mP3aFSHbzOVQ6HI-cYarLNyH6JJfE8jt_6xq2LBsZw61ICMIVVuVMUuvFg00hup1A==
-    bucket: influxdbbuck
+    bucket: influxdbbucket
     org: influxdborg
     database: influxdb
 
 aws:
   s3:
-    endpoint-url: http://localhost:4566
+    endpoint-url: ${KAFKA_SERVICE_URL:http://localhost:4566}
     bucketname: mybucket
 
 eureka:
   client:
     server-url:
-      defaultZone: http://localhost:8761/
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
 #what service used for message exchange (evreka|kafka)
 changeBy: evreka
 
-AWS_ENTRYPOINT: http://localhost:4566
-EUREKA_URL: http://localhost:8761/
-#POSTGRES_HOST: jdbc:postgresql://localhost:5435/song
-KAFKA_URL: http://localhost:9092/
